@@ -21,11 +21,20 @@ CREATE TABLE tokens(
     PRIMARY KEY (id)
 );
 
+CREATE TABLE categories (
+    id int AUTO_INCREMENT,
+    category VARCHAR(255) NOT NULL,
+    description text,
+    PRIMARY KEY(id)
+);
+
 CREATE TABLE products (
     id int AUTO_INCREMENT,
     product_name VARCHAR(255) NOT NULL,
+    category_id int,
     description TEXT,
     status int DEFAULT 0,
+    FOREIGN KEY (category_id) REFERENCES categories(id),
     PRIMARY KEY(id)
 );
 

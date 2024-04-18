@@ -12,19 +12,17 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useRouter, useSearchParams } from "next/navigation";
-import PhEyeLight from "@/icons/PhEyeLight";
-import PhEyeSlash from "@/icons/PhEyeSlash";
 import { usernameIsValid, emailIsValid, passwordIsValid } from '@/utils/validate';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
-import PhWarningCircle from "@/icons/PhWarningCircle";
 import axios from 'axios';
 import { useToast } from "@/components/ui/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Checkbox } from "@/components/ui/checkbox";
+import { CircleAlert, Eye, EyeOff } from "lucide-react";
 
 function CardWithForm() {
   const router = useRouter();
@@ -161,7 +159,7 @@ function CardWithForm() {
                             <Popover>
                                 <PopoverTrigger asChild>
                                 <div className="w-5 h-5">
-                                    <PhWarningCircle className="text-red-400/75"/>
+                                    <CircleAlert className="text-red-400/75 w-4"/>
                                 </div>
                                 </PopoverTrigger>
                                 <PopoverContent align="end" side="top" className="py-2">{usernameIsError[1]}</PopoverContent>
@@ -175,7 +173,7 @@ function CardWithForm() {
                             <Popover>
                                 <PopoverTrigger asChild>
                                 <div className="w-5 h-5">
-                                    <PhWarningCircle className="text-red-400/75"/>
+                                    <CircleAlert className="text-red-400/75 w-4"/>
                                 </div>
                                 </PopoverTrigger>
                                 <PopoverContent align="end" side="top" className="py-2">{emailIsError[1]}</PopoverContent>
@@ -186,14 +184,14 @@ function CardWithForm() {
                             <Label htmlFor="password">Password</Label>
                             <Input onChange={handleInput} value={password} id="password" name="password" type={showPassword ? "text" : "password"} placeholder="Enter your password" />
                             <div onClick={() => setShowPassword(!showPassword)} className="absolute h-6 w-6 right-3 top-[22px] cursor-pointer">
-                            <PhEyeLight className={`text-primary/40 ${showPassword ? "hidden" : "block"}`}/>
-                            <PhEyeSlash className={`text-primary/40 ${showPassword ? "block" : "hidden"}`}/>
+                            <Eye className={`w-5 text-primary/40 ${showPassword ? "hidden" : "block"}`}/>
+                            <EyeOff className={`w-5 text-primary/40 ${showPassword ? "block" : "hidden"}`}/>
                             </div>
                             <div className={`absolute right-0 -top-3 ${password !== "" && !passwordIsError[0] ? "block" : "hidden"}`}>
                             <Popover>
                                 <PopoverTrigger asChild>
                                 <div className="w-5 h-5">
-                                    <PhWarningCircle className="text-red-400/75"/>
+                                    <CircleAlert className="text-red-400/75 w-4"/>
                                 </div>
                                 </PopoverTrigger>
                                 <PopoverContent align="end" side="top" className="py-2">{passwordIsError[1]}</PopoverContent>
@@ -233,8 +231,8 @@ function CardWithForm() {
                             <Label htmlFor="password">Password</Label>
                             <Input onChange={handleInput} value={password} id="password" name="password" type={showPassword ? "text" : "password"} placeholder="Enter your password" />
                             <div onClick={() => setShowPassword(!showPassword)} className="absolute h-6 w-6 right-3 top-[22px] cursor-pointer">
-                            <PhEyeLight className={`text-primary/40 ${showPassword ? "hidden" : "block"}`}/>
-                            <PhEyeSlash className={`text-primary/40 ${showPassword ? "block" : "hidden"}`}/>
+                            <Eye className={`w-5 text-primary/40 ${showPassword ? "hidden" : "block"}`}/>
+                            <EyeOff className={`w-5 text-primary/40 ${showPassword ? "block" : "hidden"}`}/>
                             </div>
                         </div>
                       </div>

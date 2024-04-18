@@ -1,8 +1,5 @@
 "use client"
-import SolarMinimalisticMagniferOutline from "@/icons/SolarMinimalisticMagniferOutline";
-import PhBag from "@/icons/PhBag";
-import IconamoonMenuBurgerHorizontalBold from "@/icons/IconamoonMenuBurgerHorizontalBold";
-import {User} from "lucide-react"
+import {Menu, Search, ShoppingCart, User} from "lucide-react"
 import { useRouter } from "next/navigation";
 import {
     DropdownMenu,
@@ -25,15 +22,15 @@ function Header() {
                 </div>
                 <div className="flex pt-1 gap-4">
                     <div className="h-6 w-6 p-[2px]">
-                        <SolarMinimalisticMagniferOutline/>
+                        <Search className="w-6"/>
                     </div>
                     <div className="h-6 w-6">
-                        <PhBag/>
+                        <ShoppingCart className="w-6"/>
                     </div>
                     <div className="h-6 w-6">
                         <DropdownMenu>
                             <DropdownMenuTrigger className="outline-none">
-                                <IconamoonMenuBurgerHorizontalBold className="h-6 w-6"/>
+                                <Menu className="h-6 w-6"/>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end" side="bottom">
                                 <DropdownMenuLabel>Menu</DropdownMenuLabel>

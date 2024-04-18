@@ -38,7 +38,7 @@ export default function RootLayout({
                             <Users className="w-4"/>
                             <h1 className="text-sm font-semibold mt-[2px]">Customers</h1>
                         </div>
-                        <div onClick={() => router.push("/")} className={`p-2 px-3 flex font-medium cursor-pointer text-foreground/80 gap-2 rounded-lg ${pathname === "/admin/categories" ? "bg-accent" : ""}`}>
+                        <div onClick={() => router.push("/admin/categories")} className={`p-2 px-3 flex font-medium cursor-pointer text-foreground/80 gap-2 rounded-lg ${pathname === "/admin/categories" ? "bg-accent" : ""}`}>
                             <Layers3 className="w-4"/>
                             <h1 className="text-sm font-semibold mt-[2px]">Categories</h1>
                         </div>
