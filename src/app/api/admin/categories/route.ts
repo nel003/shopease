@@ -1,13 +1,16 @@
-import connection from "../../../../../database/connection"
+import mysqlConfig from "../../../../database/connection"
 import mysql, { RowDataPacket } from 'mysql2/promise';
 
 export async function GET(req: Request) {
     try {
         const { searchParams } = new URL(req.url);
         const search = searchParams.get("search")?.trim() || "";
-        const conn: mysql.Connection = await connection();
-        const [result] = await conn.query<RowDataPacket[]>(`SELECT * FROM categories WHERE category like '%${search}%' ORDER BY id DESC LIMIT 1000;`);
+        const pool = await mysql.createPool(mysqlConfig);
+        const conn = await pool.getConnection();
+        const [result] = await conn.execute<RowDataPacket[]>(`SELECT * FROM categories WHERE category like '%${search}%' ORDER BY id DESC LIMIT 1000;`);
 
+        await conn.release();
+        await pool.end();
         return Response.json(result);
     } catch(error) {
         console.log(error)
@@ -22,10 +25,13 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
     try {
         const { category, description } = await req.json();
-        const conn: mysql.Connection = await connection();
+        const pool = await mysql.createPool(mysqlConfig);
+        const conn = await pool.getConnection();
 
-        await conn.query("INSERT INTO categories VALUES (0, ?, ?);", [category, description]);
+        await conn.execute("INSERT INTO categories VALUES (0, ?, ?);", [category, description]);
 
+        await conn.release();
+        await pool.end();
         return Response.json({message: "Success"});
     } catch(error) {
         console.log(error)
@@ -41,14 +47,17 @@ export async function POST(req: Request) {
 export async function DELETE(req: Request) {
     try {
         const {id, many} = await req.json();
-        const conn: mysql.Connection = await connection();
+        const pool = await mysql.createPool(mysqlConfig);
+        const conn = await pool.getConnection();
         
         if (many) {
-            await conn.query(`DELETE FROM categories WHERE id IN (${Array(id).toString()});`);
+            await conn.execute(`DELETE FROM categories WHERE id IN (${Array(id).toString()});`);
         } else {
-            await conn.query(`DELETE FROM categories WHERE id = ?;`, [id]);
+            await conn.execute(`DELETE FROM categories WHERE id = ?;`, [id]);
         }
 
+        await conn.release();
+        await pool.end();
         return Response.json({message: 'Success'});
     } catch (error: any) {
         if (error.code) {
@@ -72,10 +81,13 @@ export async function DELETE(req: Request) {
 export async function PUT(req: Request) {
     try {
         const {id, category, description} = await req.json();
-        const conn: mysql.Connection = await connection();
+        const pool = await mysql.createPool(mysqlConfig);
+        const conn = await pool.getConnection();
 
-        await conn.query("UPDATE categories SET category = ?, description = ? WHERE id = ?;", [category, description, id]);
+        await conn.execute("UPDATE categories SET category = ?, description = ? WHERE id = ?;", [category, description, id]);
 
+        await conn.release();
+        await pool.end();
         return Response.json({message: 'Success'});
     } catch(error: any) {
         return new Response(JSON.stringify({message: "Server error"}), {
