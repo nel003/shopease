@@ -74,7 +74,7 @@ function Category() {
             const newData = res.data.map((i: CategoryType) => ({...i, checked: false}));
             setCategories(newData);
         } catch (error: any) {
-            toast("Failed to load customers", {
+            toast("Failed to load categories", {
                 description: "Server error.",
                 closeButton: true
             });

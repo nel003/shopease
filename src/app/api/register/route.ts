@@ -1,4 +1,4 @@
-import mysqlConfig from "../../../database/connection"
+import pool from "../../../database/connection"
 import mysql, { ResultSetHeader } from 'mysql2/promise';
 import { usernameIsValid, passwordIsValid, emailIsValid } from '@/utils/validate'
 import bcrypt from "bcryptjs";
@@ -37,8 +37,6 @@ export async function POST(req: Request) {
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
-
-        const pool = await mysql.createPool(mysqlConfig);
         const conn = await pool.getConnection();
         const [results] = await conn.execute<ResultSetHeader>('INSERT INTO customers(username, email, password) VALUES(?, ?, ?);', [username, email, hashedPassword]);
 
@@ -50,7 +48,6 @@ export async function POST(req: Request) {
         await conn.execute('INSERT INTO tokens VALUES(0, ?, ?)', [results.insertId, token]);
 
         await conn.release();
-        await pool.end();
         return Response.json({message: "Success", token, username, email})
     } catch(err: any) {
         const msg: string = err?.sqlMessage;

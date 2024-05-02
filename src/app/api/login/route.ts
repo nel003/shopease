@@ -1,4 +1,4 @@
-import mysqlConfig from "../../../database/connection"
+import pool from "../../../database/connection"
 import mysql, { QueryResult, ResultSetHeader, RowDataPacket } from 'mysql2/promise';
 import bcrypt from "bcryptjs";
 import jwt from 'jsonwebtoken';
@@ -13,7 +13,6 @@ interface TokenRowType extends RowDataPacket {
 export async function POST(req: Request) {
     try{
         const {username, password} = await req.json();
-        const pool = await mysql.createPool(mysqlConfig);
         const conn = await pool.getConnection();
 
         const [results] = await conn.execute<TokenRowType[]>("SELECT id, username, email, password FROM customers WHERE username=?;", [username]);
@@ -43,7 +42,6 @@ export async function POST(req: Request) {
         await conn.execute('INSERT INTO tokens VALUES(0, ?, ?)', [results[0].id, token]);
 
         await conn.release();
-        await pool.end();
         return Response.json({message: "OK", token, username, email: results[0].email});
 
     } catch(err) {

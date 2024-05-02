@@ -42,7 +42,7 @@ export default function RootLayout({
                             <Layers3 className="w-4"/>
                             <h1 className="text-sm font-semibold mt-[2px]">Categories</h1>
                         </div>
-                        <div onClick={() => router.push("/")} className={`p-2 px-3 flex font-medium cursor-pointer text-foreground/80 gap-2 rounded-lg ${pathname === "/admin/products" ? "bg-accent" : ""}`}>
+                        <div onClick={() => router.push("/admin/products")} className={`p-2 px-3 flex font-medium cursor-pointer text-foreground/80 gap-2 rounded-lg ${pathname.startsWith("/admin/products") ? "bg-accent" : ""}`}>
                             <Package className="w-4"/>
                             <h1 className="text-sm font-semibold mt-[2px]">Products</h1>
                         </div>

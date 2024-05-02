@@ -7,4 +7,6 @@ const mysqlConfig = {
     database: 'shopease',
   }
 
-export default mysqlConfig;
+const getPool = mysql.createPool(mysqlConfig);
+
+export default getPool;
