@@ -4,8 +4,11 @@ import {
     AvatarFallback,
     AvatarImage,
   } from "@/components/ui/avatar"
+import axios from "axios";
 import { Layers3, LayoutDashboard, Package, Users } from "lucide-react";
 import {useRouter, usePathname} from "next/navigation";
+import { useEffect, useState } from "react";
+import { useUserStore } from "@/store/useStore";
 
 export default function RootLayout({
     children,
@@ -14,6 +17,31 @@ export default function RootLayout({
   }>) {
     const router = useRouter();
     const pathname = usePathname();
+    const { user, setUser } = useUserStore((s) => (s));
+    const [isUserMounted, setIsUserMounted] = useState(false);
+
+    useEffect(() => {
+        initUser();
+    }, [])
+
+    async function initUser() {
+        try {
+            const res = await axios({
+                url: "/api/token/admin",
+                method: "GET",
+                headers: {
+                    "Refresh-Token": localStorage.getItem("token")
+                }
+            });
+            setUser(res.data.user);
+            setIsUserMounted(true);
+        } catch (error: any) {
+            if (error.response.data.redirect == true) {
+                router.push(error.response.data.url);
+            }
+        }
+    }
+    console.log(user)
 
     return (
         <>
@@ -49,7 +77,7 @@ export default function RootLayout({
                     </div>
                 </div>
                 <div className="w-[85%] h-screen p-2 overflow-scroll">
-                    {children}
+                    {isUserMounted ? children : <h1>Initializing user...</h1>}
                 </div>
             </div>
         </>

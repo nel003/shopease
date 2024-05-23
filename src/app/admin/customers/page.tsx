@@ -176,8 +176,8 @@ function CustomerDashboard() {
 
     return(
         <>
-        <div className="w-full p-5 py-4">
-            <h1 className="text-3xl font-bold tracking-wider pb-6">Dashboard</h1>
+        <div className="w-full p-5 py-5">
+            {/* <h1 className="trext-3xl font-bold tracking-wider pb-6">Dashboard</h1> */}
             <Card>
                 <CardHeader>
                     <CardTitle>Customers</CardTitle>

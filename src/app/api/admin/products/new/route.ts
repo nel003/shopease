@@ -32,6 +32,7 @@ export async function POST(req: Request) {
     let conn;
     try {
         conn = await pool.getConnection();
+        await conn.beginTransaction();
 
         const fd = await req.formData();
         const productName = fd.get("productName");
@@ -70,19 +71,24 @@ export async function POST(req: Request) {
             variantsWithID.push(vaObj);
         }
 
-        const combinedVariants = combineVariants(variantsWithID);
-        for(const cv of combinedVariants){
-            const name = (cv.map((i: any) => {
-                const key = Object.keys(i)[0];
-                return i[key].value
-            })).join(", ");
-            const ids = (cv.map((i: any) => {
-                const key = Object.keys(i)[0];
-                return i[key].id
-            })).join("-");
-            
-            const [peres] = await conn.execute<ResultSetHeader>("INSERT INTO product_entry VALUES (0, ?, ?, ?, ?, ?, ?, ?, ?);", [ids, null, name, 999999, 999999, 0, 999999, pres.insertId]);
-        }   
+        if (variantsWithID.length > 0) {
+            const combinedVariants = combineVariants(variantsWithID);
+            for(const cv of combinedVariants){
+                const name = (cv.map((i: any) => {
+                    const key = Object.keys(i)[0];
+                    return i[key].value
+                })).join(", ");
+                const ids = (cv.map((i: any) => {
+                    const key = Object.keys(i)[0];
+                    return i[key].id
+                })).join("-");
+                
+                const [peres] = await conn.execute<ResultSetHeader>("INSERT INTO product_entry VALUES (0, ?, ?, ?, ?, ?, ?, ?, ?);", [ids, null, name, 999999, 999999, 0, 999999, pres.insertId]);
+            }   
+        } else {
+            await conn.execute<ResultSetHeader>("INSERT INTO product_entry VALUES (0, ?, ?, ?, ?, ?, ?, ?, ?);", [null, null, "Default", 999999, 999999, 0, 999999, pres.insertId]);
+        }
+
         
         await conn.commit();
 

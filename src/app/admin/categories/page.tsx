@@ -41,6 +41,7 @@ import {
   } from "@/components/ui/popover"
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { useUserStore } from "@/store/useStore";
 
 type CategoryType = {
     id: number
@@ -57,8 +58,10 @@ function Category() {
     const [newDescription, setNewDescription] = useState("");
     const [categories, setCategories] = useState<CategoryType[]>([]);
     const [debounce] = useDebounce(search, 300);
+    const {user, setUser} = useUserStore();
 
     useEffect(() => {
+        axios.defaults.headers.common["Authorization"] = user?.token;
         loadCategories();
     }, [debounce]);
 
@@ -183,12 +186,12 @@ function Category() {
     return(
       <>
         <div className="w-full">
-          <h1 className="text-3xl font-bold p-4 px-5">Dashboard</h1>
+          {/* <h1 className="text-3xl font-bold p-4 px-5">Dashboard</h1> */}
           <div className="w-full p-5 flex gap-4">
             <div className="w-full">
                 <Card>
                     <CardHeader>
-                        <CardTitle className="text-lg">Categories</CardTitle>
+                        <CardTitle>Categories</CardTitle>
                         <CardDescription>Manage categories</CardDescription>
                     </CardHeader>
                     <CardContent>

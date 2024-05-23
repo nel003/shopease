@@ -104,3 +104,24 @@ INSERT INTO variant_combi VALUES (0, "Red", 4, 4, 1);
 SELECT pe.name, pe.price, vo.name FROM variant_combi AS vc 
 JOIN variant_options AS vo ON vc.variant_option_id = vo.id
 JOIN product_entry as pe ON vc.product_entry_id = pe.id;
+
+CREATE TABLE admins(
+    id int AUTO_INCREMENT,
+    name varchar(150),
+    username varchar(24) UNIQUE,
+    email varchar(100) UNIQUE,
+    password varchar(255),
+    gender varchar(20),
+    birthdate date,
+    PRIMARY KEY (id)
+);
+
+INSERT INTO admins VALUES(0, 'Arnel Lopena', 'nel003', 'alopena55555@gmail.com', '$2a$10$tWFWN12D//RYSPP3efSQguqfFNzsdhCrQ9mzoV4F55bPgLwh3uKcy', 'Male', '2003-10-30');
+
+CREATE TABLE admin_tokens(
+    id int AUTO_INCREMENT,
+    admin_id int,
+    token varchar(200) UNIQUE,
+    FOREIGN KEY(admin_id) REFERENCES admins(id),
+    PRIMARY KEY (id)
+);

@@ -34,14 +34,7 @@ import { useEffect, useState } from "react";
 import { useDebounce } from "use-debounce"; 
 import axios from "axios";
 import { toast } from "sonner"
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-  } from "@/components/ui/popover"
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
   
 type ProductType = {
     id: number
@@ -108,12 +101,12 @@ function Products() {
     return(
       <>
         <div className="w-full">
-          <h1 className="text-3xl font-bold p-4 px-5">Dashboard</h1>
+          {/* <h1 className="text-3xl font-bold p-4 px-5">Dashboard</h1> */}
           <div className="w-full p-5 flex gap-4">
             <div className="w-full">
                 <Card>
                     <CardHeader>
-                        <CardTitle className="text-lg">Products</CardTitle>
+                        <CardTitle>Products</CardTitle>
                         <CardDescription>Manage products</CardDescription>
                     </CardHeader>
                     <CardContent>
@@ -174,7 +167,7 @@ function Products() {
                                             <TableCell>{itm.product_name}</TableCell>
                                             <TableCell>{itm.category}</TableCell>
                                             <TableCell>{itm.description}</TableCell>
-                                            <TableCell>{itm.status}</TableCell>
+                                            <TableCell className={`${itm.status === 1 ? "text-green-500":""}`}>{itm.status === 1 ? "Published": "Pending"}</TableCell>
                                             <TableCell className="py-0 space-x-2">
                                                 <AlertDialog>
                                                     <AlertDialogTrigger asChild> 
@@ -193,37 +186,7 @@ function Products() {
                                                         </AlertDialogFooter>
                                                     </AlertDialogContent>
                                                 </AlertDialog>
-
-                                                <Popover>
-                                                    <PopoverTrigger asChild>
-                                                        <Button className="mt-1 h-8"><PenLine className="w-4"/></Button>
-                                                    </PopoverTrigger>
-                                                    <PopoverContent align="end" className="w-80">
-                                                        <div className="grid gap-4">
-                                                            <div className="space-y-2">
-                                                                <h4 className="font-medium leading-none">Modify `{itm.category}` category</h4>
-                                                            </div>
-                                                            <div className="space-y-2">
-                                                                <div className="">
-                                                                <Label htmlFor="Category">Category</Label>
-                                                                <Input
-                                                                    id="Category"
-                                                                    placeholder="Enter category"
-                                                                />
-                                                                </div>
-                                                                <div className="">
-                                                                <Label htmlFor="description">Description</Label>
-                                                                <Textarea 
-                                                                    placeholder="Enter category description"
-                                                                ></Textarea>
-                                                                </div>
-                                                            </div>
-                                                            <div className="">
-                                                                <Button className="w-full">Save changes</Button>
-                                                            </div>
-                                                        </div>
-                                                    </PopoverContent>
-                                                </Popover>
+                                                <Button onClick={() => router.push("/admin/products/edit/"+itm.id)} className="mt-1 h-8"><PenLine className="w-4"/></Button>
                                             </TableCell>
                                         </TableRow>
                                     )

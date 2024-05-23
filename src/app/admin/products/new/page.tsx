@@ -123,6 +123,7 @@ function NewProduct() {
                 },
                 data: FD
             });
+            
             router.push("/admin/products/new/variants/"+res.data.id);
         } catch (error) {
             
@@ -202,7 +203,7 @@ function NewProduct() {
                         </div>
                     </div>
                         <div>
-                            <Label htmlFor="previews">Previews</Label>
+                            <Label htmlFor="previews">Photos</Label>
                             <div className="grid gap-4 grid-cols-8 pr-10 pb-4">
                                 {previewsData.map((itm, idx) => {
                                     return(

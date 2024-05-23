@@ -14,8 +14,11 @@ import {
     TableHeader,
     TableRow,
   } from "@/components/ui/table"
+import { toast } from "sonner";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
   
 type Variant = {
+    hasChanges: boolean
     id: number
     preview: null,
     name: string
@@ -43,10 +46,33 @@ function Variants() {
                 url: "/api/admin/products/new/variants/"+id,
                 method: "GET"
             });
-            setVariants(res.data);
+            setVariants(res.data.map((i: Variant) => ({...i, hasChanges: false})));
         } catch (error) {
-            
+            toast("Server error!")
         }
+    }
+    async function submit(e: React.MouseEvent<HTMLButtonElement>) {
+        const target = e.target as HTMLButtonElement;
+        target.disabled = true;
+        target.innerText = "Processing..."
+        try {
+            const res = await axios({
+                url: "/api/admin/products/new/variants/"+id,
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                data: JSON.stringify({variants})
+            });
+            toast("Success");
+            setTimeout(() => {
+                router.push("/admin/products");
+            }, 1000);
+        } catch (error) {
+            toast("Server error!")
+        }
+        target.disabled = false;
+        target.innerText = "Save and Publish"
     }
     console.log(variants);
 
@@ -64,32 +90,40 @@ function Variants() {
                         <TableCaption>Price, On Sale Price, On Sale and Stocks field are editable.</TableCaption>
                         <TableHeader>
                             <TableRow>
-                                <TableHead className="w-20">Preview</TableHead>
                                 <TableHead>Variant</TableHead>
                                 <TableHead>IDs</TableHead>
                                 <TableHead>Price</TableHead>
                                 <TableHead>On Sale Price</TableHead>
                                 <TableHead>Stocks</TableHead>
-                                <TableHead>On Sale</TableHead>
+                                <TableHead className="w-40">On Sale</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
                             {variants.map((itm, idx) => {
                                 return(
                                     <TableRow key={idx}>
-                                        <TableCell>{itm.preview || "null"}</TableCell>
                                         <TableCell>{itm.name}</TableCell>
                                         <TableCell>{itm.ids}</TableCell>
                                         <TableCell className="w-48">
-                                            <input className="w-1/2 p-1" onChange={(e) => {setVariants(variants.map((i) => (i.id === itm.id ? {...i, price: +e.target.value} : {...i}) ))}} type="number" value={itm.price} />
+                                            <input className="w-[65%] p-1" onChange={(e) => {setVariants(variants.map((i) => (i.id === itm.id ? {...i, price: +e.target.value, hasChanges: true} : {...i}) ))}} type="number" value={itm.price} />
                                         </TableCell>
                                         <TableCell className="w-48">
-                                            <input className="w-1/2 p-1" onChange={(e) => {setVariants(variants.map((i) => (i.id === itm.id ? {...i, on_sale_price: +e.target.value} : {...i}) ))}} type="number" value={itm.on_sale_price} />
+                                            <input className="w-[65%] p-1" onChange={(e) => {setVariants(variants.map((i) => (i.id === itm.id ? {...i, on_sale_price: +e.target.value, hasChanges: true} : {...i}) ))}} type="number" value={itm.on_sale_price} />
                                         </TableCell>
                                         <TableCell className="w-48">
-                                            <input className="w-1/2 p-1" onChange={(e) => {setVariants(variants.map((i) => (i.id === itm.id ? {...i, stock: +e.target.value} : {...i}) ))}} type="number" value={itm.stock} />
+                                            <input className="w-[65%] p-1" onChange={(e) => {setVariants(variants.map((i) => (i.id === itm.id ? {...i, stock: +e.target.value, hasChanges: true} : {...i}) ))}} type="number" value={itm.stock} />
                                         </TableCell>
-                                        <TableCell>{itm.is_on_sale}</TableCell>
+                                        <TableCell className="py-0">
+                                            <Select onValueChange={(v) => setVariants(variants.map((i) => (i.id === itm.id ? {...i, is_on_sale: +v, hasChanges: true}:{...i})))} value={itm.is_on_sale.toString()}>
+                                                <SelectTrigger className="h-8">
+                                                    <SelectValue placeholder="Select"/>
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectItem value="1">True</SelectItem>
+                                                    <SelectItem value="0">False</SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                        </TableCell>
                                         {/* <TableCell>{itm.on_sale_price}</TableCell> */}
                                         {/* <TableCell>{itm.stock}</TableCell> */}
                                     </TableRow>
@@ -99,7 +133,7 @@ function Variants() {
                         </Table>
                 </CardContent>
                 <CardFooter className="flex justify-end">
-                    <Button>Save and Publish</Button>
+                    <Button onClick={submit}>Save and Publish</Button>
                 </CardFooter>
             </Card>
         </div>
