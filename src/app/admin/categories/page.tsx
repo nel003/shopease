@@ -61,7 +61,6 @@ function Category() {
     const {user, setUser} = useUserStore();
 
     useEffect(() => {
-        axios.defaults.headers.common["Authorization"] = user?.token;
         loadCategories();
     }, [debounce]);
 

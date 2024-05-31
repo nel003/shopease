@@ -116,8 +116,8 @@ import {
               </Card>
             </div>
           </div>
-          <div className="w-full p-5 flex gap-4">
-            <div className="w-[60%] h-[70vh] rounded-lg">
+          <div className="w-full p-5 flex gap-4 flex-col md:flex-row">
+            <div className="w-full md:w-[60%] h-[50vh] md:h-[70vh] rounded-lg">
               <Card className="w-full h-full">
                   <CardHeader>
                   <CardTitle className="text-lg">Daily Sales</CardTitle>
@@ -141,19 +141,20 @@ import {
                               />
                               <YAxis
                                 stroke="#888888"
+                                className="stroke-primary"
                                 fontSize={12}
                                 tickLine={false}
                                 axisLine={false}
                                 tickFormatter={(value) => `${value}`}
                               />
                               <Tooltip labelClassName="text-primary"/>
-                          <Line type="monotone" dataKey="pv" className="fill-primary" stroke="currentColor" activeDot={{ r: 8 }} />
+                          <Line type="monotone" dataKey="pv" stroke="primaryColor"  className="stroke-primary" activeDot={{ r: 8 }} />
                         </LineChart>
                       </ResponsiveContainer>
                   </CardContent>
                 </Card>
               </div>
-            <div className="w-[40%]">
+            <div className="w-full md:w-[40%]">
                 <Card>
                     <CardHeader>
                     <CardTitle className="text-lg">Recent Orders</CardTitle>

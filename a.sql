@@ -125,3 +125,16 @@ CREATE TABLE admin_tokens(
     FOREIGN KEY(admin_id) REFERENCES admins(id),
     PRIMARY KEY (id)
 );
+
+CREATE TABLE cart(
+    id int AUTO_INCREMENT,
+    customer_id int,
+    product_entry_id int,
+    quantity int,
+    product_id int,
+
+    FOREIGN KEY(customer_id) REFERENCES customers(id),
+    FOREIGN KEY(product_entry_id) REFERENCES product_entry(id),
+    FOREIGN KEY(product_id) REFERENCES products(id),
+    PRIMARY KEY(id)
+);

@@ -5,9 +5,9 @@ import {
     AvatarImage,
   } from "@/components/ui/avatar"
 import axios from "axios";
-import { Layers3, LayoutDashboard, Package, Users } from "lucide-react";
+import { ChevronRight, Layers3, LayoutDashboard, Package, Users } from "lucide-react";
 import {useRouter, usePathname} from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { useUserStore } from "@/store/useStore";
 
 export default function RootLayout({
@@ -19,6 +19,7 @@ export default function RootLayout({
     const pathname = usePathname();
     const { user, setUser } = useUserStore((s) => (s));
     const [isUserMounted, setIsUserMounted] = useState(false);
+    const [showNav, setShowNav] = useState(false);
 
     useEffect(() => {
         initUser();
@@ -34,6 +35,7 @@ export default function RootLayout({
                 }
             });
             setUser(res.data.user);
+            axios.defaults.headers.common["Authorization"] = res.data.user?.token;
             setIsUserMounted(true);
         } catch (error: any) {
             if (error.response.data.redirect == true) {
@@ -41,13 +43,15 @@ export default function RootLayout({
             }
         }
     }
-    console.log(user)
 
     return (
         <>
             <div className="w-screen flex">
-                <div className="w-[15%] min-w-[250px] h-screen border-r p-6">
-                    <div className="flex gap-3 p-2">
+                <div className={`w-[250px] duration-200 ${showNav ? "left-0":"-left-[250px]"} md:left-0 md:w-full md:min-w-[250px] md:max-w-[250px] bg-background h-screen border-r z-50 absolute md:relative p-4`}>
+                    <div className="w-full mt-6 px-0 flex gap-2 relative">
+                        <div onClick={() => setShowNav(!showNav)} className="block md:hidden w-5 h-6 rounded-full rounded-tl-none rounded-bl-none border border-l-background absolute -top-1 -right-9">
+                            <ChevronRight className={`w-4 duration-500 ${showNav ? "rotate-0":"rotate-180"}`}></ChevronRight>
+                        </div>
                         <Avatar>
                             <AvatarImage src="#" alt="@shadcn" />
                             <AvatarFallback>AL</AvatarFallback>
@@ -76,7 +80,7 @@ export default function RootLayout({
                         </div>
                     </div>
                 </div>
-                <div className="w-[85%] h-screen p-2 overflow-scroll">
+                <div className="w-full h-screen overflow-scroll p-2">
                     {isUserMounted ? children : <h1>Initializing user...</h1>}
                 </div>
             </div>

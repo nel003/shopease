@@ -35,12 +35,14 @@ export async function DELETE(req: Request) {
         const { many, id } = await req.json();
         console.log(many)
         if (many) {
+            await conn.execute(`DELETE FROM cart WHERE product_id IN (${id.join(",")});`, [id]); 
             await conn.execute(`DELETE FROM variant_options WHERE product_id IN (${id.join(",")});`, [id]); 
             await conn.execute(`DELETE FROM variants WHERE product_id IN (${id.join(",")});`, [id]); 
             await conn.execute(`DELETE FROM product_entry WHERE product_id IN (${id.join(",")});`, [id]); 
             await conn.execute(`DELETE FROM product_files WHERE product_id IN (${id.join(",")});`, [id]); 
             await conn.execute(`DELETE FROM products WHERE id IN (${id.join(",")});`, [id]); 
         } else {
+            await conn.execute(`DELETE FROM cart WHERE product_id = ?;`, [id]); 
             await conn.execute(`DELETE FROM variant_options WHERE product_id = ?;`, [id]); 
             await conn.execute(`DELETE FROM variants WHERE product_id = ?;`, [id]); 
             await conn.execute(`DELETE FROM product_entry WHERE product_id = ?;`, [id]); 

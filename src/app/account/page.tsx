@@ -23,6 +23,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Checkbox } from "@/components/ui/checkbox";
 import { CircleAlert, Eye, EyeOff } from "lucide-react";
+import { useUserStore } from "@/store/useStore";
 
 function CardWithForm() {
   const router = useRouter();
@@ -35,6 +36,7 @@ function CardWithForm() {
   const [usernameIsError, setUsernameIsError] = useState([true, ""]);
   const [passwordIsError, setPasswordIsError] = useState([true, ""]);
   const [emailIsError, setEmailIsError] = useState([true, ""]);
+  const {user} = useUserStore();
 
   function handleInput(e: React.ChangeEvent<HTMLInputElement>) {
     const target = e.target
@@ -129,7 +131,7 @@ function CardWithForm() {
       return;
     } catch (error: any) {
       toast({
-        title: "Registration Failed",
+        title: "Login Failed",
         description: error.response.data.message,
       })
     }
@@ -139,7 +141,7 @@ function CardWithForm() {
 
   return (
     <div className="w-screen h-screen grid place-items-center">
-        <Tabs defaultValue="register" className="w-[350px]">
+        <Tabs defaultValue="login" className="w-[350px]">
         <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="register">Register</TabsTrigger>
             <TabsTrigger value="login">Login</TabsTrigger>

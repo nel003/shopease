@@ -146,8 +146,8 @@ function NewProduct() {
  
     return(
         <div className="p-5">
-            <div className="w-full flex gap-5">
-                <div className="w-[70%]">
+            <div className="w-full flex gap-5 flex-col">
+                <div className="w-full md:w-[70%]">
                     <div className="grid gap-4">
                         <div className="space-y-2">
                             <h4 className="leading-none text-xl font-bold">Add new product</h4>
@@ -183,13 +183,14 @@ function NewProduct() {
                             placeholder="Enter product  description"
                             onChange={(e) => setDescription(e.target.value)}
                             value={description}
+                            rows={6}
                         ></Textarea>
                         </div>
                     </div>
                     <div>
                         <div>
                             <Label htmlFor="File">Thumbnail</Label>
-                            <Label className="aspect-square w-[20%] border rounded-lg grid place-items-center relative overflow-hidden p-2" htmlFor="File">
+                            <Label className="aspect-square min-w-20 w-[20%] border rounded-lg grid place-items-center relative overflow-hidden p-2" htmlFor="File">
                                 <img className={`object-fill ${thumbnail ? "block" : "hidden"}`} src={imgData || ""} alt=""/>
                                 <PlusIcon className={`w-8 text-foreground/50 ${thumbnail ? "hidden":"block"}`}></PlusIcon>
                             </Label>
@@ -204,7 +205,7 @@ function NewProduct() {
                     </div>
                         <div>
                             <Label htmlFor="previews">Photos</Label>
-                            <div className="grid gap-4 grid-cols-8 pr-10 pb-4">
+                            <div className="grid gap-4 grid-cols-3 md:grid-cols-8 pr-10 pb-4">
                                 {previewsData.map((itm, idx) => {
                                     return(
                                         <div key={idx} className="aspect-square w-full border rounded-lg grid place-items-center relative p-2">
@@ -218,7 +219,7 @@ function NewProduct() {
                                         </div>
                                     )
                                 })}
-                                <Label className={`aspect-square w-full border rounded-lg place-items-center relative overflow-hidden p-2 ${previews.length > 3 ? "hidden":"grid"}`} htmlFor="previews">
+                                <Label className={`aspect-square  w-full border rounded-lg place-items-center relative overflow-hidden p-2 ${previews.length > 3 ? "hidden":"grid"}`} htmlFor="previews">
                                     <PlusIcon className={`w-8 text-foreground/50 ${previews.length > 3 ? "hidden":"block"}`}></PlusIcon>
                                 </Label>
                                 <Input
@@ -232,7 +233,7 @@ function NewProduct() {
                         </div>
                 </div>
                 </div>
-                <div className="w-[30%]">
+                <div className="w-full md:w-[30%] pb-10">
                     <div className="space-y-2 mb-4">
                         <h4 className="leading-none text-xl font-bold">Variants</h4>
                         <p className="text-xs">Please carefully check your inputs, you can't modify if saved.</p>
