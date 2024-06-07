@@ -8,6 +8,8 @@ interface UserType extends RowDataPacket {
     email: string,
     name: string,
     token: string
+    birthdate: string,
+    gender: string
 }
 
 export async function GET(req: Request) {
@@ -25,7 +27,7 @@ export async function GET(req: Request) {
         }
         conn = await pool.getConnection();
 
-        const [res] = await conn.execute<UserType[]>("SELECT a.id, t.token, a.username, a.name, a.email FROM tokens AS t JOIN customers AS a ON a.id = t.customer_id WHERE token = ?;", [token]);
+        const [res] = await conn.execute<UserType[]>("SELECT a.id, t.token, a.username, a.name, a.email, a.birthdate, a.gender FROM tokens AS t JOIN customers AS a ON a.id = t.customer_id WHERE token = ?;", [token]);
         if (res.length < 1) {
             return new Response(JSON.stringify({redirect: true, url: "/account"}), {
                 status: 401,

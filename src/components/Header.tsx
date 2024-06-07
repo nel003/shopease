@@ -1,5 +1,5 @@
 "use client"
-import {Menu, Search, ShoppingCart, User} from "lucide-react"
+import {Box, LogOut, Menu, NotebookTabs, Search, Settings, ShoppingCart, User} from "lucide-react"
 import { useRouter } from "next/navigation";
 import {
     DropdownMenu,
@@ -19,11 +19,12 @@ import {
     SheetTrigger,
   } from "@/components/ui/sheet"
 import Cart from "./Cart";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 function Header() {
     const {user} = useUserStore();
     const router = useRouter();
-
+    
     return(
         <header className="w-screen flex justify-center fixed top-0 bg-background/5 backdrop-blur-xl z-50">
             <div className="wrapper w-[1200px] p-4 flex">
@@ -53,14 +54,33 @@ function Header() {
                     <div className={`h-6 w-6 ${user ? "block":"hidden"}`}>
                         <DropdownMenu>
                             <DropdownMenuTrigger className="outline-none">
-                                <Menu className="h-6 w-6"/>
+                                <Avatar className="w-8 h-8 -mt-1">
+                                    <AvatarImage src="https://github.com/shadcn.png" />
+                                    <AvatarFallback>CN</AvatarFallback>
+                                </Avatar>
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end" side="bottom">
-                                <DropdownMenuLabel>Menu</DropdownMenuLabel>
+                            <DropdownMenuContent align="end" side="bottom" className="min-w-[200px]">
+                                <h1 className="text-sm px-2 pt-1 font-semibold">{user?.username}</h1>
+                                <h1 className="text-xs text-muted-foreground px-2 max-w-sm text-nowrap text-ellipsis overflow-hidden">{user?.email}</h1>
                                 <DropdownMenuSeparator />
-                                <DropdownMenuItem onClick={() => router.push('/account')}>
-                                    <User className="mr-2 h-4 w-4" />
-                                    <span>Account</span>
+                                <DropdownMenuItem className="flex justify-between">
+                                    <span className="font-medium">Orders</span>
+                                    <Box className="h-4 w-4" />
+                                </DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem onClick={() => router.push("/profile")} className="flex justify-between">
+                                    <span className="font-medium">Account</span>
+                                    <User className="h-4 w-4" />
+                                </DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem className="flex justify-between">
+                                    <span className="font-medium">Address</span>
+                                    <NotebookTabs className="h-4 w-4" />
+                                </DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem className="flex justify-between">
+                                    <span className="font-medium">Log out</span>
+                                    <LogOut className="h-4 w-4" />
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
