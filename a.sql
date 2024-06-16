@@ -28,6 +28,28 @@ CREATE TABLE categories (
     PRIMARY KEY(id)
 );
 
+DELIMITER //
+CREATE PROCEDURE raise_error()
+BEGIN
+    SIGNAL SQLSTATE '45000'
+    SET MESSAGE_TEXT = 'Value cannot be less than 0';
+END//
+
+DELIMITER ;
+
+DELIMITER //
+
+CREATE TRIGGER before_update_product_entry
+BEFORE UPDATE ON product_entry
+FOR EACH ROW
+BEGIN
+    IF NEW.stock < 0 THEN
+        CALL raise_error();
+    END IF;
+END//
+
+DELIMITER ;
+
 CREATE TABLE products (
     id int AUTO_INCREMENT,
     product_name VARCHAR(255) NOT NULL,
@@ -136,5 +158,50 @@ CREATE TABLE cart(
     FOREIGN KEY(customer_id) REFERENCES customers(id),
     FOREIGN KEY(product_entry_id) REFERENCES product_entry(id),
     FOREIGN KEY(product_id) REFERENCES products(id),
+    PRIMARY KEY(id)
+);
+
+CREATE TABLE addresses(
+    id int AUTO_INCREMENT,
+    customer_id int,
+    fullname varchar(255),
+    number varchar(20),
+    house varchar(255),
+    province varchar(255),
+    city varchar(255),
+    barangay varchar(255),
+    FOREIGN KEY(customer_id) REFERENCES customers(id),
+    PRIMARY KEY(id)
+);
+
+CREATE TABLE orders(
+    id int AUTO_INCREMENT,
+    number varchar(200) UNIQUE,
+    customer_id int,
+    address_id int,
+    payment_method int,
+    status int,
+    status_text text,
+    description text,
+    quantity int,
+    total int,
+    order_on datetime,
+
+    FOREIGN KEY(customer_id) REFERENCES customers(id),
+    FOREIGN KEY(address_id) REFERENCES addresses(id),
+    PRIMARY KEY(id)
+);
+
+CREATE TABLE order_items(
+    id int AUTO_INCREMENT,
+    customer_id int,
+    order_id int,
+    product_id int,
+    product_entry_id int,
+    quantity int,
+    FOREIGN KEY(customer_id) REFERENCES customers(id),
+    FOREIGN KEY(order_id) REFERENCES orders(id),
+    FOREIGN KEY(product_id) REFERENCES products(id),
+    FOREIGN KEY(product_entry_id) REFERENCES product_entry(id),
     PRIMARY KEY(id)
 );

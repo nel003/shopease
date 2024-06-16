@@ -55,7 +55,6 @@ export default function Password(){
                     <Input onChange={(e) => setReNewPassword(e.target.value)} value={reNewpassword} placeholder="Re-enter new password"/>
                 </div>
                 <div className="pt-4 flex gap-2">
-                    <Button variant="outline">Back to Home</Button>
                     <Button disabled={!password || !newPassword || !reNewpassword} onClick={update}>Update password</Button>
                 </div>
             </div>

@@ -16,7 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
-import { useUserStore } from "@/store/useStore";
+import { useCartCount, useUserStore } from "@/store/useStore";
 import { useRouter } from "next/navigation";
 import { Drawer, DrawerContent, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
 import formatPrice from "@/utils/formatPrice";
@@ -69,6 +69,9 @@ export default function Product() {
 
     const [selectedInd, setSelectedInd] = useState("");
     const [disabled, setDisabled] = useState(true);
+    const [noStock, setNoStock] = useState(false);
+
+    const {setCartCount} = useCartCount();
 
     useEffect(() => {
         const values = Object.values(selectedVariant).join("-");
@@ -104,6 +107,14 @@ export default function Product() {
         })
       }, [api, product])
 
+    async function initCart() {
+        try {
+            const res = await axios.get("/api/user/count");
+            setCartCount(res.data[0].quantity);
+        } catch (error) {
+        }
+    }
+
     function hasStock(key: string, value: string) {
         const cp = {...selectedVariant};
         cp[key] = value;
@@ -133,7 +144,18 @@ export default function Product() {
             });
             setSelectedVariant(initVar);
             setPrice(res.data?.min_price !== res.data?.max_price ? formatPrice(res.data?.min_price || 0) +" - "+ formatPrice(res.data?.max_price || 0):formatPrice(res.data?.min_price || 0));
-            setDisabled((res.data?.entries.length || 0) > 1 ? true : false);
+            
+            if((res.data?.entries.length || 0) > 1){
+                setDisabled(true);
+            } else {
+                setDisabled(false);
+            }
+
+            if((res.data?.entries.length || 0) < 2 && (res.data?.entries[0].stock || 0) < 1){
+                setDisabled(true);
+                setNoStock(true);
+            }
+
         } catch (error) {
             console.log(error)
         }
@@ -157,10 +179,11 @@ export default function Product() {
                 },
                 data: JSON.stringify({product_entry_id: product?.entries && product?.entries.length > 1 ? f?.id : product?.entries[0].id , quantity, product_id: id})
             });
-            toast({
-                title: "Success",
-                description: "Added to cart"
-            });
+            // toast({
+            //     title: "Success",
+            //     description: "Added to cart",
+            // });
+            await initCart();
         } catch (error) { 
             toast({
                 title: "Failed",
@@ -175,7 +198,7 @@ export default function Product() {
         <main className="w-screen overflow-hidden">
             <div className="w-full min-h-[95vh] bg-primary/[0.03] flex justify-center">
                 <div>
-                <div className="w-full max-w-[1200px] my-20 flex flex-col md:flex-row gap-0 md:gap-6 bg-white rounded-md p-4 md:pt-10 md:px-10">
+                <div className="w-full max-w-[1200px] my-20 flex flex-col md:flex-row gap-0 md:gap-6 bg-background rounded-md p-4 md:pt-10 md:px-10">
                     <div className="w-full md:w-[45%]">
                         <Carousel setApi={setApi} className="mx-auto w-full md:w-[80%]">
                             <CarouselContent>
@@ -205,25 +228,25 @@ export default function Product() {
                                 <h1 className="text-2xl py-4 font-semibold text-primary">{product?.min_price !== product?.max_price ? formatPrice(product?.min_price || 0) +" - "+ formatPrice(product?.max_price || 0):formatPrice(product?.min_price || 0)}</h1>
                             </div>
                             <h1 className="text-lg font-medium">{product?.product_name} Lorem ipsum dolor, sit amet consectetur adipisicing elit.</h1>
-                            <div className="flex gap-[2px]">
+                            {/* <div className="flex gap-[2px]">
                                 <Star className="w-3 text-yellow-400 fill-yellow-400"/>
                                 <Star className="w-3 text-yellow-400 fill-yellow-400"/>
                                 <Star className="w-3 text-yellow-400 fill-yellow-400"/>
                                 <Star className="w-3 text-yellow-400 fill-yellow-400"/>
                                 <Star className="w-3 text-yellow-400 "/>
                                 <span className="text-xs mt-1 text-muted-foreground">4/5 {"(3)"}</span>
-                            </div>
+                            </div> */}
                         </div>
                         <div className="pb-6 hidden md:block">
                             <h1 className="text-lg font-medium">{product?.product_name} Lorem ipsum dolor, sit amet consectetur adipisicing elit.</h1>
-                            <div className="flex gap-[2px]">
+                            {/* <div className="flex gap-[2px]">
                                 <Star className="w-3 text-yellow-400 fill-yellow-400"/>
                                 <Star className="w-3 text-yellow-400 fill-yellow-400"/>
                                 <Star className="w-3 text-yellow-400 fill-yellow-400"/>
                                 <Star className="w-3 text-yellow-400 fill-yellow-400"/>
                                 <Star className="w-3 text-yellow-400 "/>
                                 <span className="text-xs mt-1 text-muted-foreground">4/5 {"(3)"}</span>
-                            </div>
+                            </div> */}
                             <div>
                                 <h1 className="text-2xl py-4 font-semibold text-primary">{price}</h1>
                             </div>
@@ -265,7 +288,7 @@ export default function Product() {
                         </div>
                         <div className="gap-4 w-full pt-8 sticky left-0 top-[100vh] hidden md:flex">
                             <Button onClick={() => console.log(user)} className="w-full" variant="outline">Cancel</Button>
-                            <Button disabled={disabled} onClick={addToCart} className="w-full">Add to Cart</Button>
+                            <Button disabled={disabled} onClick={addToCart} className="w-full">{noStock ? "Out of Stock":"Add to Cart"}</Button>
                         </div>
                         {/* Mobile */}
                         <div className="flex md:hidden gap-4 w-full pt-8 sticky left-0 top-[100vh]">
@@ -326,7 +349,7 @@ export default function Product() {
                         </div>
                     </div>
                     </div>
-                    <div className="p-4 bg-white">
+                    <div className="p-4 bg-background">
                         <h1 className="text-lg">Product description</h1>
                         <p>{product?.description}</p>
                     </div>

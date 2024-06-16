@@ -58,9 +58,6 @@ export default function Apperance(){
                         </div>
                     </div>
                 </div>
-                <div className="pt-8 flex gap-2">
-                    <Button variant="outline">Back to Home</Button>
-                </div>
             </div>
         </div>
     )

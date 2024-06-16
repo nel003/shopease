@@ -17,6 +17,9 @@ import {
     TableRow,
   } from "@/components/ui/table"
   import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { useEffect, useState } from "react";
+import axios from "axios";
+import formatPrice from "@/utils/formatPrice";
 
   const data = [
     {
@@ -63,9 +66,37 @@ import {
     },
   ];
   
+  type Stats = {
+      sales: number
+      products_count: number
+      customers_count: number
+      orders_count: number
+  }
+  type Order = {
+      number: string
+      quantity: number
+      total: number
+  }
 
   function AdminDashboard() {
-  
+    const [stats, setStats] = useState<Stats>();
+    const [orders, setOrders] = useState<Order[]>([]);
+    
+    useEffect(() => {
+      loadStatistics();
+    }, []);
+
+    async function loadStatistics() {
+      try {
+        const res = await axios.get("/api/admin/statistics");
+        console.log(res.data)
+        setStats(res.data.stats);
+        setOrders(res.data.orders);
+      } catch (error) {
+        
+      }
+    }
+
     return(
       <>
         <div className="w-full">
@@ -78,7 +109,7 @@ import {
                     <span className="flex-grow">Total Sales</span>
                     <span><TrendingUp className="w-4"/></span>
                   </div>
-                  <h1 className="font-bold text-3xl">₱10,000</h1>
+                  <h1 className="font-bold text-3xl">{formatPrice(stats?.sales || 0)}</h1>
                 </CardContent>
               </Card>
             </div>
@@ -89,7 +120,7 @@ import {
                     <span className="flex-grow">Total Customers</span>
                     <span><Users className="w-4"/></span>
                   </div>
-                  <h1 className="font-bold text-3xl">400</h1>
+                  <h1 className="font-bold text-3xl">{stats?.customers_count}</h1>
                 </CardContent>
               </Card>
             </div>
@@ -97,10 +128,10 @@ import {
               <Card className="w-full pt-5">
                 <CardContent>
                   <div className="font-semibold text-accent-foreground/80 flex">
-                    <span className="flex-grow">Product</span>
+                    <span className="flex-grow">Total Products</span>
                     <span><Package className="w-4"/></span>
                   </div>
-                  <h1 className="font-bold text-3xl">200</h1>
+                  <h1 className="font-bold text-3xl">{stats?.products_count}</h1>
                 </CardContent>
               </Card>
             </div>
@@ -111,7 +142,7 @@ import {
                     <span className="flex-grow">Total orders</span>
                     <span><Boxes className="w-4"/></span>
                   </div>
-                  <h1 className="font-bold text-3xl">100</h1>
+                  <h1 className="font-bold text-3xl">{stats?.orders_count}</h1>
                 </CardContent>
               </Card>
             </div>
@@ -161,20 +192,22 @@ import {
                     </CardHeader>
                     <CardContent>
                     <Table>
-                        <TableCaption>A list of recent students.</TableCaption>
+                        <TableCaption>A list of recent orders.</TableCaption>
                         <TableHeader>
                         <TableRow>
-                            <TableHead>Firstname</TableHead>
-                            <TableHead>Middlename</TableHead>
-                            <TableHead>Lastname</TableHead>
+                            <TableHead>Order #</TableHead>
+                            <TableHead>Total items</TableHead>
+                            <TableHead>Order Total</TableHead>
                         </TableRow>
                         </TableHeader>
                         <TableBody>
-                            <TableRow>
-                            <TableCell>DAD</TableCell>
-                            <TableCell>adad</TableCell>
-                            <TableCell>wdq</TableCell>
+                          {orders?.map((it, id) => (
+                            <TableRow key={id}>
+                              <TableCell>{it.number}</TableCell>
+                              <TableCell>{it.quantity}</TableCell>
+                              <TableCell>{formatPrice(it.total)}</TableCell>
                             </TableRow>
+                          ))}
                         </TableBody>
                     </Table>
                     </CardContent>

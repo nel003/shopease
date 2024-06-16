@@ -6,7 +6,7 @@ import { Star } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import formatPrice from "@/utils/formatPrice";
 import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 type  Product = {
     category_id: number
@@ -24,6 +24,10 @@ export default function Products() {
     const [isLoading, setIsLoading] = useState(false);
     const [hasMore, setHasMore] = useState(true);
     const router = useRouter();
+    const params = useSearchParams();
+
+    const cat = params.get("cat") || "";
+    const search = params.get("search") || "";
 
     useEffect(() => {
       function handleScroll() {
@@ -38,11 +42,11 @@ export default function Products() {
 
     useEffect(() => {
       loadProducts();
-    }, []);
-  
+    }, [cat, search]);
+    
     async function loadProducts() {
       try {
-          const res = await axios("/api/products?page=0");
+          const res = await axios("/api/products?page=0&cat="+cat+"&search="+search);
           setProducts(res.data);
       } catch (error) {
         console.log(error)
@@ -53,7 +57,7 @@ export default function Products() {
       try {
         if (!isLoading && hasMore) {
           setIsLoading(true);
-          const res = await axios("/api/products?page="+page);
+          const res = await axios("/api/products?page="+page+"&search="+search);
           if (res.data.length > 0) {
             setProducts([...products, ...res.data]);
             setPage(page => page + 1);
@@ -75,7 +79,7 @@ export default function Products() {
             <div className="w-full min-h-[50vh] bg-primary/[0.03] flex justify-center">
                 <div className="w-full max-w-[1200px] py-20">
                     <div className="p-4 flex justify-between">
-                    <h1 className="text-xl font-medium tracking-wide">Products</h1>
+                    <h1 className="text-xl font-medium tracking-wide text-center w-full">Products</h1>
                     <div className="space-x-2">
                         
                     </div>
@@ -83,19 +87,19 @@ export default function Products() {
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 p-4 gap-4">
                     {products.map((i, id) => (
                       <div onClick={() => router.push("/product/"+i.id)} key={id} className="bg-background h-full w-full col-span-1 p-4 rounded-lg shadow-sm py-6">
-                      <div className="w-full aspect-square h-[70%] p-2 overflow-hidden">
-                          <img className="object-cover" alt="sd" src={i.thumbnail}/>
-                      </div>
-                      <h1>{i.product_name}</h1>
-                      <div className="flex gap-[2px]">
-                          <Star className="w-3 text-yellow-400 fill-yellow-400"/>
-                          <Star className="w-3 text-yellow-400 fill-yellow-400"/>
-                          <Star className="w-3 text-yellow-400 fill-yellow-400"/>
-                          <Star className="w-3 text-yellow-400 fill-yellow-400"/>
-                          <Star className="w-3 text-yellow-400 "/>
-                          <span className="text-xs mt-1 text-muted-foreground">{"(3)"}Reviews</span>
-                      </div>
-                      <h1 className="text-primary font-semibold">{formatPrice(i.min_price)}</h1>
+                        <div className="w-full aspect-square h-[85%] p-2 overflow-hidden">
+                            <img className="object-cover object-center aspect-square" alt="sd" src={i.thumbnail}/>
+                        </div>
+                        <h1>{i.product_name}</h1>
+                        {/* <div className="flex gap-[2px]">
+                            <Star className="w-3 text-yellow-400 fill-yellow-400"/>
+                            <Star className="w-3 text-yellow-400 fill-yellow-400"/>
+                            <Star className="w-3 text-yellow-400 fill-yellow-400"/>
+                            <Star className="w-3 text-yellow-400 fill-yellow-400"/>
+                            <Star className="w-3 text-yellow-400 "/>
+                            <span className="text-xs mt-1 text-muted-foreground">{"(3)"}Reviews</span>
+                        </div> */}
+                        <h1 className="text-primary font-semibold">{formatPrice(i.min_price)}</h1>
                     </div>
                     ))}
                     </div>

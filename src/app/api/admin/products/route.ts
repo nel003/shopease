@@ -53,8 +53,16 @@ export async function DELETE(req: Request) {
         await conn.release();
 
         return Response.json({messagae: "ok"});
-    } catch (error) {
+    } catch (error: any) {
         console.log(error)
+        if (error.code == 'ER_ROW_IS_REFERENCED_2') {
+            return new Response(JSON.stringify({message: "You cant delete a product with order."}), {
+                status: 401,
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+        }
         return new Response(JSON.stringify({message: "Server error"}), {
             status: 500,
             headers: {

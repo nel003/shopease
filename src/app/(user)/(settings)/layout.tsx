@@ -1,6 +1,7 @@
 "use client" 
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator"
+import { ChevronLeft } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 
 export default function ProfileLayot({
@@ -14,7 +15,10 @@ export default function ProfileLayot({
         <>
             <div className="p-6">
                 <div className="pb-6">
-                    <h1 className="font-bold text-2xl">Account</h1>
+                    <div className="w-full flex justify-between">
+                        <h1 className="font-bold text-2xl">Account</h1>
+                        <Button onClick={() => router.push("/home")} variant="outline"> <ChevronLeft className="w-4 mr-3 text-primary"/> Back to Home</Button>
+                    </div>
                     <h2 className="text-muted-foreground pb-6">Manage your account and preferences.</h2>
                     <Separator/>
                 </div>

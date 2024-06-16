@@ -39,7 +39,7 @@ export async function GET(req: Request) {
         const jwtToken = await jwt.sign({
             ...res[0],
             role: 'admin'
-        }, "secrettsd", { expiresIn: 60*60*24*7 });
+        }, "secrettsd", { expiresIn: '7d' });
         console.log(res)
         return Response.json({message: "OK", user: {...res[0], token: jwtToken}});
 

@@ -60,7 +60,7 @@ function Products() {
     async function loadProducts() {
         try {
             const res = await axios({
-                url: "/api/admin/products",
+                url: "/api/admin/products?filter="+search,
                 method: "GET"
             });
             const newData = res.data.map((i: ProductType) => ({...i, checked: false}));
@@ -92,8 +92,12 @@ function Products() {
                 data: JSON.stringify(data)
             });
             loadProducts();
-        } catch (error) {
-            
+        } catch (error: any) {
+            if (error.response.status == 401) {
+                toast(error.response.data.message);
+                return;
+            }
+            toast("Server error.");
         }
     }
     console.log(products)

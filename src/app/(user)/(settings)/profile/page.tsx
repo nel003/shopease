@@ -84,7 +84,6 @@ export default function Profile(){
                     <Input onChange={(e) => setBirthdate(e.target.value)} value={birthdate} type="date" placeholder="Birthday"/>
                 </div>
                 <div className="pt-4 flex gap-2">
-                    <Button variant="outline">Back to Home</Button>
                     <Button disabled={!name || !email || !name || !username || !birthdate || !gender} onClick={update}>Update profile</Button>
                 </div>
             </div>

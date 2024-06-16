@@ -3,6 +3,7 @@ import axios from "axios";
 import { Minus, Plus, Trash, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react"
 import { Button } from "./ui/button";
+import { useRouter } from "next/navigation";
 
 interface Item {
     id: number
@@ -17,6 +18,7 @@ export default function Cart() {
     const [cart, setCart] = useState<Item[]>();
     const [isLoading, setIsLoading] = useState(true);
     const [total, setTotal] = useState(0);
+    const router = useRouter();
 
     useEffect(() => {
         (async () => {
@@ -112,7 +114,7 @@ export default function Cart() {
                 
                 <div className="w-full absolute h-36 bottom-0 p-4 left-0 border-t flex justify-between">
                     <h1 className="font-semibold text-lg pt-1">Total: {formatPrice(total)}</h1>
-                    <Button>Check out</Button>
+                    <Button onClick={() => router.push("/checkout")}>Check out</Button>
                 </div>
             </div>
         </>

@@ -5,7 +5,7 @@ import {
     AvatarImage,
   } from "@/components/ui/avatar"
 import axios from "axios";
-import { ChevronRight, Layers3, LayoutDashboard, Package, Users } from "lucide-react";
+import { Boxes, ChevronRight, Layers3, LayoutDashboard, Package, Users } from "lucide-react";
 import {useRouter, usePathname} from "next/navigation";
 import { useEffect, useLayoutEffect, useState } from "react";
 import { useUserStore } from "@/store/useStore";
@@ -77,6 +77,10 @@ export default function RootLayout({
                         <div onClick={() => router.push("/admin/products")} className={`p-2 px-3 flex font-medium cursor-pointer text-foreground/80 gap-2 rounded-lg ${pathname.startsWith("/admin/products") ? "bg-accent" : ""}`}>
                             <Package className="w-4"/>
                             <h1 className="text-sm font-semibold mt-[2px]">Products</h1>
+                        </div>
+                        <div onClick={() => router.push("/admin/orders")} className={`p-2 px-3 flex font-medium cursor-pointer text-foreground/80 gap-2 rounded-lg ${pathname.startsWith("/admin/orders") ? "bg-accent" : ""}`}>
+                            <Boxes className="w-4"/>
+                            <h1 className="text-sm font-semibold mt-[2px]">Orders</h1>
                         </div>
                     </div>
                 </div>

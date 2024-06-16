@@ -16,7 +16,18 @@ export type User = {
 type UserAction = {
     setUser: (payload: User['user']) => void
 }
+
+type CartCount = {
+    cartCount: number
+    setCartCount: (payload: number) => void
+}
+
 export const useUserStore = create<User & UserAction>((set) => ({
     user: null,
     setUser: (payload: User['user']) => set({user: payload})
+}))
+
+export const useCartCount = create<CartCount>((set) => ({
+    cartCount: 0,
+    setCartCount: (payload: number) => set({cartCount: payload})
 }))

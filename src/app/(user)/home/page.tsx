@@ -11,6 +11,8 @@ import Footer from "@/components/Footer";
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import formatPrice from "@/utils/formatPrice";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 type  Product = {
   category_id: number
@@ -26,6 +28,7 @@ export default function Home() {
   const [products, setProducts] = useState<Product[]>([]);
   const [newProducts, setNewProducts] = useState<Product[]>([]);
   const [page, setPage] = useState(0);
+  const router = useRouter();
 
   const mainElement = useRef(null);
 
@@ -65,11 +68,13 @@ export default function Home() {
         <div className="w-full h-screen grid place-items-center">
             <div className="grid place-items-center space-y-6">
               <h1 className="text-4xl text-center w-[80%] font-medium">With every click, our cart fill up with joy and anticipation, here on ShopEase!</h1>
-              <Button className="rounded-full px-10">Shop Now</Button>
+              <Link href="#ms">
+                <Button className="rounded-full px-10">Shop Now</Button>
+              </Link>
             </div>
         </div>
 
-        <div className="w-full min-h-[50vh] bg-primary/[0.03] flex justify-center">
+        <div id="ms" className="w-full min-h-[50vh] bg-primary/[0.03] flex justify-center">
           <div className="w-full max-w-[1200px] py-20">
             <div className="p-4 flex justify-between">
               <h1 className="text-xl font-medium tracking-wide">New Arrivals</h1>
@@ -84,19 +89,19 @@ export default function Home() {
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 p-4 gap-4">
               {newProducts.map((i, id) => (
-                <div key={id} className="bg-background h-full w-full col-span-1 p-4 rounded-lg shadow-sm py-6">
-                  <div className="w-full h-[70%] p-2 overflow-hidden">
+                <div onClick={() => router.push("/product/"+i.id)} key={id} className="bg-background h-full w-full col-span-1 p-4 rounded-lg shadow-sm py-6">
+                  <div className="w-full h-[85%] p-2 overflow-hidden">
                     <img className="object-cover" alt="sd" src={i.thumbnail}/>
                   </div>
                   <h1>{i.product_name}</h1>
-                  <div className="flex gap-[2px]">
+                  {/* <div className="flex gap-[2px]">
                     <Star className="w-3 text-yellow-400 fill-yellow-400"/>
                     <Star className="w-3 text-yellow-400 fill-yellow-400"/>
                     <Star className="w-3 text-yellow-400 fill-yellow-400"/>
                     <Star className="w-3 text-yellow-400 fill-yellow-400"/>
                     <Star className="w-3 text-yellow-400 "/>
                     <span className="text-xs mt-1 text-muted-foreground">{"(3)"}Reviews</span>
-                  </div>
+                  </div> */}
                   <h1 className="text-primary font-semibold">{formatPrice(i.min_price)}</h1>
                 </div>
               ))}
@@ -115,14 +120,14 @@ export default function Home() {
                 <div className="h-[180%] hidden md:block aspect-square absolute -right-20 -top-10">
                   <Image src={Gadgets || ""} alt="" objectFit="true"/>
                 </div>
-                <Button className="rounded-full px-6">Explore Gadgets <ArrowRight className="w-5 ml-3"/></Button>
+                <Button onClick={() => router.push("/products?cat=gadgets")} className="rounded-full px-6">Explore Gadgets <ArrowRight className="w-5 ml-3"/></Button>
               </div>
               <div className="aspect-[16/8] border border-primary/70 rounded-lg col-span-1 p-8 py-16 space-y-3 relative">
                 <h1 className="text-2xl tracking-wide text-foreground/80">Crafted for Excellence.</h1>
                 <p className="w-[90%] sm:w-[65%] text-foreground/70 pb-4">
                   Discover a range of reliable, high performance tools designed to meet the needs of professional bulders.
                 </p>
-                <Button className="rounded-full px-6">Explore Tools <ArrowRight className="w-5 ml-3"/></Button>
+                <Button onClick={() => router.push("/products?cat=tools")} className="rounded-full px-6">Explore Tools <ArrowRight className="w-5 ml-3"/></Button>
                 <div className="h-[110%] hidden md:block aspect-square absolute -right-12 top-5">
                   <Image src={Tools || ""} alt="" objectFit="true"/>
                 </div>
@@ -132,7 +137,7 @@ export default function Home() {
                 <p className="w-[90%] sm:w-[65%] text-foreground/70 pb-4 relative z-10">
                   Discover stylish, high-quality clothing designed for comfort and elegance, perfect for every occasion.
                 </p>
-                <Button className="rounded-full px-6">Explore Clothes <ArrowRight className="w-5 ml-3"/></Button>
+                <Button onClick={() => router.push("/products?cat=clothes")} className="rounded-full px-6">Explore Clothes <ArrowRight className="w-5 ml-3"/></Button>
                 <div className="h-[90%] hidden md:block aspect-square absolute -right-2 top-2 -z-0">
                   <Image src={Clothes || ""} alt="" objectFit="true"/>
                 </div>
@@ -156,19 +161,19 @@ export default function Home() {
             <TabsContent value="register">
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 p-4 gap-4">
                 {products?.map((i, id) => (
-                  <div key={id} className="bg-background/70 h-full w-full col-span-1 p-4 rounded-lg shadow-sm py-6">
-                    <div className="w-full h-[70%] p-2 overflow-hidden">
+                  <div onClick={() => router.push("/product/"+i.id)} key={id} className="bg-background/70 h-full w-full col-span-1 p-4 rounded-lg shadow-sm py-6">
+                    <div className="w-full h-[85%] p-2 overflow-hidden">
                       <img className="object-cover" alt="sd" src={i.thumbnail}/>
                     </div>
                     <h1>{i.product_name}</h1>
-                    <div className="flex gap-[2px]">
+                    {/* <div className="flex gap-[2px]">
                       <Star className="w-3 text-yellow-400 fill-yellow-400"/>
                       <Star className="w-3 text-yellow-400 fill-yellow-400"/>
                       <Star className="w-3 text-yellow-400 fill-yellow-400"/>
                       <Star className="w-3 text-yellow-400 fill-yellow-400"/>
                       <Star className="w-3 text-yellow-400 "/>
                       <span className="text-xs mt-1 text-muted-foreground">{"(3)"}Reviews</span>
-                    </div>
+                    </div> */}
                     <h1 className="text-primary font-semibold">{formatPrice(i.min_price)}</h1>
                   </div>
                 ))}
@@ -176,7 +181,7 @@ export default function Home() {
             </TabsContent>
             </Tabs>
             <div className="w-full flex justify-center">
-              <Button variant="link">Explore Products</Button>
+              <Button onClick={() => router.push("/products")} variant="link">Explore Products</Button>
             </div>
           </div>
         </div>

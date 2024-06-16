@@ -61,6 +61,10 @@
     }
   }
 
-  /* * {
-    border: 1px solid black;
-  } */
+  :root {
+    scroll-behavior: smooth;
+  }
+
+  .item-shadow {
+    box-shadow: rgba(24, 20, 20, 0.1) 0px 10px 50px;
+  }
