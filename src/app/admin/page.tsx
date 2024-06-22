@@ -65,6 +65,11 @@ import formatPrice from "@/utils/formatPrice";
       amt: 2100,
     },
   ];
+
+  type Chart = {
+    name: string
+    sales: number
+  }
   
   type Stats = {
       sales: number
@@ -81,7 +86,8 @@ import formatPrice from "@/utils/formatPrice";
   function AdminDashboard() {
     const [stats, setStats] = useState<Stats>();
     const [orders, setOrders] = useState<Order[]>([]);
-    
+    const [chart, setChart] = useState<any>();
+    console.log(chart)
     useEffect(() => {
       loadStatistics();
     }, []);
@@ -92,6 +98,7 @@ import formatPrice from "@/utils/formatPrice";
         console.log(res.data)
         setStats(res.data.stats);
         setOrders(res.data.orders);
+        setChart(res.data.chart);
       } catch (error) {
         
       }
@@ -151,12 +158,12 @@ import formatPrice from "@/utils/formatPrice";
             <div className="w-full md:w-[60%] h-[50vh] md:h-[70vh] rounded-lg">
               <Card className="w-full h-full">
                   <CardHeader>
-                  <CardTitle className="text-lg">Daily Sales</CardTitle>
+                  <CardTitle className="text-lg">Weekly Sales</CardTitle>
                   </CardHeader>
                   <CardContent className=" px-2 pb-14 w-full h-full">
                       <ResponsiveContainer className="p-0" width="100%" height="100%">
                         <LineChart
-                          data={data}
+                          data={chart}
                           margin={{
                             right: 20,
                             bottom: 30,
@@ -164,7 +171,7 @@ import formatPrice from "@/utils/formatPrice";
                         >
                           <CartesianGrid stroke="#88888899" strokeDasharray="3 3" />
                               <XAxis
-                                dataKey="name"
+                                dataKey="order_on"
                                 stroke="#888888"
                                 fontSize={12}
                                 tickLine={false}
@@ -179,7 +186,7 @@ import formatPrice from "@/utils/formatPrice";
                                 tickFormatter={(value) => `${value}`}
                               />
                               <Tooltip labelClassName="text-primary"/>
-                          <Line type="monotone" dataKey="pv" stroke="primaryColor"  className="stroke-primary" activeDot={{ r: 8 }} />
+                          <Line type="monotone" dataKey="total" stroke="primaryColor"  className="stroke-primary" activeDot={{ r: 8 }} />
                         </LineChart>
                       </ResponsiveContainer>
                   </CardContent>

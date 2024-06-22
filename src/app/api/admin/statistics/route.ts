@@ -19,7 +19,10 @@ export async function GET(req: Request) {
         
         const [resO] = await conn.execute("SELECT number, quantity, total FROM orders LIMIT 9;");
 
-        return Response.json({stats: resS[0], orders: resO});
+        const [resD] = await conn.execute("SELECT order_on, SUM(total) AS total FROM orders WHERE order_on >= CURDATE() - INTERVAL 7 DAY ORDER BY order_on;");
+        console.log(resD)
+
+        return Response.json({stats: resS[0], orders: resO, chart: resD});
     } catch (error) {
         console.log(error);
         return new Response(JSON.stringify({message: "Server error"}), {

@@ -5,10 +5,11 @@ import {
     AvatarImage,
   } from "@/components/ui/avatar"
 import axios from "axios";
-import { Boxes, ChevronRight, Layers3, LayoutDashboard, Package, Users } from "lucide-react";
+import { Boxes, ChevronRight, Cog, Layers3, LayoutDashboard, Moon, Package, Sun, Users } from "lucide-react";
 import {useRouter, usePathname} from "next/navigation";
 import { useEffect, useLayoutEffect, useState } from "react";
 import { useUserStore } from "@/store/useStore";
+import { useTheme } from "next-themes";
 
 export default function RootLayout({
     children,
@@ -20,10 +21,16 @@ export default function RootLayout({
     const { user, setUser } = useUserStore((s) => (s));
     const [isUserMounted, setIsUserMounted] = useState(false);
     const [showNav, setShowNav] = useState(false);
+    const [pt, setPt] = useState("");
+    const { setTheme, theme } = useTheme();
 
     useEffect(() => {
         initUser();
     }, [])
+
+    useEffect(() => {
+        setPt(theme || "");
+    }, [theme])
 
     async function initUser() {
         try {
@@ -83,6 +90,25 @@ export default function RootLayout({
                             <h1 className="text-sm font-semibold mt-[2px]">Orders</h1>
                         </div>
                     </div>
+                    <div className="p-2 space-y-2">
+                    <div className="mt-9">
+                        <h1 className="text-sm mb-1 text-muted-foreground">Theme</h1>
+                        <div className="w-full border rounded-lg">
+                            <div onClick={() => setTheme("system")} className={`p-4 py-3 text-xs font-bold border-b hover:bg-primary/5 hover:text-accent-foreground flex cursor-pointer ${pt === "system" ? "bg-primary/5 text-accent-foreground":"text-muted-foreground"}`}>
+                                <span className="grow">System</span>
+                                <Cog className="w-4 h-4"/>
+                            </div>
+                            <div onClick={() => setTheme("dark")} className={`p-4 py-3 text-xs font-bold border-b hover:bg-primary/5 hover:text-accent-foreground flex cursor-pointer ${pt === "dark" ? "bg-primary/5 text-accent-foreground":"text-muted-foreground"}`}>
+                                <span className="grow">Dark</span>
+                                <Moon className="w-4 h-4"/>
+                            </div>
+                            <div onClick={() => setTheme("light")} className={`p-4 py-3 text-xs font-bold hover:bg-primary/5 hover:text-accent-foreground flex cursor-pointer ${pt === "light" ? "bg-primary/5 text-accent-foreground":"text-muted-foreground"}`}>
+                                <span className="grow">Light</span>
+                                <Sun className="w-4 h-4"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 </div>
                 <div className="w-full h-screen overflow-scroll p-2">
                     {isUserMounted ? children : <h1>Initializing user...</h1>}

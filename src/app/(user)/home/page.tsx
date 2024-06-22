@@ -93,7 +93,7 @@ export default function Home() {
                   <div className="w-full h-[85%] p-2 overflow-hidden">
                     <img className="object-cover" alt="sd" src={i.thumbnail}/>
                   </div>
-                  <h1>{i.product_name}</h1>
+                  <h1 className="text-sm font-medium text-ellipsis overflow-hidden max-w-full max-h-6">{i.product_name}</h1>
                   {/* <div className="flex gap-[2px]">
                     <Star className="w-3 text-yellow-400 fill-yellow-400"/>
                     <Star className="w-3 text-yellow-400 fill-yellow-400"/>
@@ -165,7 +165,7 @@ export default function Home() {
                     <div className="w-full h-[85%] p-2 overflow-hidden">
                       <img className="object-cover" alt="sd" src={i.thumbnail}/>
                     </div>
-                    <h1>{i.product_name}</h1>
+                    <h1 className="text-sm font-medium text-ellipsis overflow-hidden max-w-full max-h-6">{i.product_name}</h1>
                     {/* <div className="flex gap-[2px]">
                       <Star className="w-3 text-yellow-400 fill-yellow-400"/>
                       <Star className="w-3 text-yellow-400 fill-yellow-400"/>

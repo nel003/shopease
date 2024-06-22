@@ -198,7 +198,7 @@ export default function Product() {
         <main className="w-screen overflow-hidden">
             <div className="w-full min-h-[95vh] bg-primary/[0.03] flex justify-center">
                 <div>
-                <div className="w-full max-w-[1200px] my-20 flex flex-col md:flex-row gap-0 md:gap-6 bg-background rounded-md p-4 md:pt-10 md:px-10">
+                <div className="w-full max-w-[1200px] my-20 flex flex-col md:flex-row gap-0 md:gap-6 bg-background rounded-md p-4 md:pt-10 md:px-10 mx-auto">
                     <div className="w-full md:w-[45%]">
                         <Carousel setApi={setApi} className="mx-auto w-full md:w-[80%]">
                             <CarouselContent>
@@ -227,7 +227,7 @@ export default function Product() {
                             <div>
                                 <h1 className="text-2xl py-4 font-semibold text-primary">{product?.min_price !== product?.max_price ? formatPrice(product?.min_price || 0) +" - "+ formatPrice(product?.max_price || 0):formatPrice(product?.min_price || 0)}</h1>
                             </div>
-                            <h1 className="text-lg font-medium">{product?.product_name} Lorem ipsum dolor, sit amet consectetur adipisicing elit.</h1>
+                            <h1 className="text-lg font-medium">{product?.product_name}</h1>
                             {/* <div className="flex gap-[2px]">
                                 <Star className="w-3 text-yellow-400 fill-yellow-400"/>
                                 <Star className="w-3 text-yellow-400 fill-yellow-400"/>
@@ -238,7 +238,7 @@ export default function Product() {
                             </div> */}
                         </div>
                         <div className="pb-6 hidden md:block">
-                            <h1 className="text-lg font-medium">{product?.product_name} Lorem ipsum dolor, sit amet consectetur adipisicing elit.</h1>
+                            <h1 className="text-lg font-medium">{product?.product_name}</h1>
                             {/* <div className="flex gap-[2px]">
                                 <Star className="w-3 text-yellow-400 fill-yellow-400"/>
                                 <Star className="w-3 text-yellow-400 fill-yellow-400"/>
@@ -350,7 +350,7 @@ export default function Product() {
                     </div>
                     </div>
                     <div className="p-4 bg-background">
-                        <h1 className="text-lg">Product description</h1>
+                        <h1 className="text-lg text-muted-foreground">Product description</h1>
                         <p>{product?.description}</p>
                     </div>
                 </div>

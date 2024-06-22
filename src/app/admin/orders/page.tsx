@@ -19,7 +19,7 @@ import {
     AlertDialogTrigger,
   } from "@/components/ui/alert-dialog"  
 import { Button } from "@/components/ui/button";
-import { Trash2 } from "lucide-react";
+import { Trash2, File } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import {
     Table,
@@ -110,6 +110,15 @@ function Orders() {
         }
     } 
 
+    async function exportO() {
+        try {
+            const res = await axios.get("/api/admin/export/orders");
+            router.push(res.data.path);
+        } catch (error) {
+            toast("Failed to export");
+        }
+    }
+
     return(
         <div>
             <Card>
@@ -139,6 +148,10 @@ function Orders() {
                             </AlertDialog>
                             <div>
                                 <Input className="w-80" onChange={(e) => setSearch(e.target.value)} value={search} placeholder="Search by #"/>
+                            </div>
+                            <span className="grow"></span>
+                            <div>
+                                <Button onClick={exportO}><File className="w-4"/>&nbsp;Export</Button>
                             </div>
                         </div>
                     </div>

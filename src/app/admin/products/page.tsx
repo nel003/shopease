@@ -6,7 +6,7 @@ import {
     CardHeader,
     CardTitle,
   } from "@/components/ui/card"
-  import { Boxes, Package, PenLine, Plus, PlusIcon, Trash2, TrendingUp, Users } from "lucide-react";
+  import { Boxes, File, Package, PenLine, Plus, PlusIcon, Trash2, TrendingUp, Users } from "lucide-react";
   import {
     Table,
     TableBody,
@@ -100,7 +100,15 @@ function Products() {
             toast("Server error.");
         }
     }
-    console.log(products)
+    
+    async function exportP() {
+        try {
+            const res = await axios.get("/api/admin/export/product");
+            router.push(res.data.path);
+        } catch (error) {
+            toast("Failed to export");
+        }
+    }
 
     return(
       <>
@@ -136,8 +144,9 @@ function Products() {
                             <Input onChange={(e) => setSearch(e.target.value)} value={search} placeholder="Search..."/>
                         </div>
                         <span className="grow"></span>
-                        <div>
-                            <Button onClick={() => router.push("/admin/products/new")} variant="outline"><Plus className="w-4"/> New Product</Button>
+                        <div className="flex gap-2">
+                            <Button onClick={() => router.push("/admin/products/new")} variant="outline"><Plus className="w-4"/>&nbsp;New Product</Button>
+                            <Button onClick={exportP}><File className="w-4"/>&nbsp;Export</Button>
                         </div>
                     </div>
                     <div className="border rounded-lg">

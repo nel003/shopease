@@ -31,8 +31,9 @@ import {
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 
+
 function Header() {
-    const {user} = useUserStore();
+    const {user, setUser} = useUserStore();
     const router = useRouter();
     const {cartCount, setCartCount} = useCartCount();
     const pathname = usePathname();
@@ -49,7 +50,16 @@ function Header() {
             setCartCount(res.data[0].quantity);
         } catch (error) {
             console.log(error)
-            toast("Server error");
+        }
+    }
+
+    async function logout() {
+        try {
+            await axios.post("/api/user/logout")
+            setUser(null);
+            router.push("/home");
+        } catch (error) {
+            
         }
     }
     
@@ -116,7 +126,7 @@ function Header() {
                                     <User className="h-4 w-4" />
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator />
-                                <DropdownMenuItem className="flex justify-between">
+                                <DropdownMenuItem onClick={logout} className="flex justify-between">
                                     <span className="font-medium">Log out</span>
                                     <LogOut className="h-4 w-4" />
                                 </DropdownMenuItem>

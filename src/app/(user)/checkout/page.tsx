@@ -4,11 +4,16 @@ import Header from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import formatPrice from "@/utils/formatPrice";
 import axios from "axios";
-import { Box, HandCoins } from "lucide-react";
+import { Box, HandCoins, InfoIcon, PlusCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+  } from "@/components/ui/popover"
+  
 type Address = {
     id: number
     fullname: string
@@ -141,7 +146,15 @@ function Checkout() {
                             {shippingMethods.map((it, id) => (
                                 <div onClick={() => setShipping(it.id)} key={id} className={`cursor-pointer w-full flex justify-between p-4 border rounded-lg ${shipping === it.id ? "border-primary" : "border-accent"}`}>
                                     <h1 className="font-medium">{it.name}</h1>
-                                    <h1 className="text-muted-foreground">₱{it.price}</h1>
+                                    <h1 className={`${it.price === 0 ? "hidden":"block"} text-muted-foreground`}>₱{it.price}</h1>
+                                    <Popover>
+                                        <PopoverTrigger asChild>
+                                            <InfoIcon className={`${it.price === 0 ? "block":"hidden"} text-muted-foreground w-5`}/>
+                                        </PopoverTrigger>
+                                        <PopoverContent align="end" side="top">
+                                            <h3>Building 143, Tuburan, Pagadian City</h3>
+                                        </PopoverContent>
+                                    </Popover>
                                 </div>
                             ))}
                         </div>
@@ -150,11 +163,17 @@ function Checkout() {
                         <h1 className="text-lg">Address</h1>
                         <div className="w-full grid grid-cols-1 sm:grid-cols-2 gap-4">
                             {addresses.map((it, id) => (
-                                <div key={id} onClick={() => setAddress(!shipping || shipping == 1 ? null : it.id)} className={`border-2 border-dashed p-2 rounded-lg ${address === it.id ? "border-primary" : "border-accent"}`}>
+                                <div key={id} onClick={() => setAddress(!shipping || shipping == 1 ? null : it.id)} className={`border border-dashed p-2 rounded-lg ${address === it.id ? "border-primary" : "border-accent"}`}>
                                     <h1 className="text-md font-medium">{it.fullname} <span className="text-muted-foreground">| {it.number}</span></h1>
                                     <h2 className="">{it.house}, {it.barangay}, {it.city}, {it.barangay}, {it.province}</h2>
                                 </div>
                             ))}
+                            <div onClick={() => router.push("/address")} className="border border-dashed p-2 rounded-lg h-full w-full grid place-items-center">
+                                <div className="flex gap-2">
+                                    <PlusCircle className="w-4 text-muted-foreground" />
+                                    <h1 className="text-muted-foreground">Add new address</h1>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div className="mt-8">
@@ -169,7 +188,7 @@ function Checkout() {
                                         <h1>{it.product_name}</h1>
                                         <div className="w-full flex justify-between">
                                             <h1 className="text-muted-foreground">{it.variant_name}</h1>
-                                            <h1 className="text-lg">{it.quantity}</h1>
+                                            <h1 className="text-md ">x{it.quantity}</h1>
                                         </div>
                                         <h1 className="text-xl font-bold text-primary">{formatPrice(it.price)}</h1>
                                     </div>
